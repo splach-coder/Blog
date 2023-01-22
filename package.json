@@ -1,0 +1,14 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "This blog is built using Node.js and MongoDB as its technology stack. Node.js provides the backend server-side functionality while MongoDB is used as the database to store and retrieve the blog's data. The blog will feature user authentication, commenting system, and dynamic rendering of pages using the power of JavaScript. Expect fast and efficient performance with this full-stack JavaScript setup.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "anas ben",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
