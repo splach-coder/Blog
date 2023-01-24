@@ -7,6 +7,11 @@ const session = require('express-session')
 require('dotenv').config();
 const app = express();
 
+
+
+// Passport Config
+require('./config/passport')(passport);
+
 //config db
 const db = require("./config/keys").mongoURI;
 mongoose.set('strictQuery', true);
@@ -57,7 +62,6 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index-routes'));
 app.use('/users', require('./routes/userRoutes'));
 app.use('/filter', require('./routes/filtreReqs'));
-// app.use('/users', require('./routes/users'));
 
 const PORT = process.env.PORT || 3000;
 

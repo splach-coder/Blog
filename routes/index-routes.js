@@ -20,6 +20,11 @@ router.get('/login', (req, res) => {
     res.render('login');
 })
 
+//go to login page
+router.get('/dashboard', (req, res) => {
+    res.send('welcome to dashboard');
+})
+
 //go to register page
 router.get('/register', (req, res) => {
     res.render('register', {

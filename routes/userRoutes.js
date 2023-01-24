@@ -29,4 +29,13 @@ router.post('/register', [
 ], userController.Register);
 
 
+router.post('/login', [
+    check('email').notEmpty().withMessage('Email is required').isEmail().normalizeEmail(),
+    check('password').notEmpty().withMessage('Password is required')
+], userController.Login);
+
+
+router.get('/confirm/:token/:id', userController.confirm);
+
+
 module.exports = router;

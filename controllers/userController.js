@@ -17,8 +17,6 @@ const allCountries = phoneUtil.getSupportedRegions().map(region => {
 
 const Register = async (req, res) => {
 
-    console.log(req.body);
-
     const {
         firstname,
         lastname,
@@ -114,7 +112,7 @@ const Register = async (req, res) => {
                                         subject: 'Email Confirmation',
                                         html: `<p>Dear <b>${user.lastname}</b>,</p>
                                         <p>We are glad to have you on board! To complete the registration process, we kindly request that you confirm your email address by clicking on the link below:</p>
-                                        <p><a href="http://localhost:3000/users/confirm/${encodeURIComponent(token)}/${encodeURIComponent(user.id)}" target="_blank">Confirm</a></p>
+                                        <p><a href="http://localhost:${process.env.PORT}/users/confirm/${encodeURIComponent(token)}/${encodeURIComponent(user.id)}" target="_blank">Confirm</a></p>
                                         <p>By confirming your email, you will be able to fully access all the features of our service and be the first to know about our updates and offers.</p>
                                         <p>We appreciate your prompt attention to this matter, and look forward to providing you with the best experience possible.</p>
                                         <p>Best regards,<br>
@@ -143,7 +141,57 @@ const Register = async (req, res) => {
     }
 }
 
+const Login = (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+}
+
+const confirm = async (req, res) => {
+    try {
+
+        const tokenFromUrl = decodeURIComponent(req.params.token);
+
+        // look up the user using the token
+        const user = await User.findOne({
+            _id: decodeURIComponent(req.params.id)
+        });
+
+        if (!user) {
+            return res.status(404).send({
+                msg: 'user not found'
+            });
+        }
+
+        // compare the token from the URL with the hashed token in the database
+        const match = await bcrypt.compare(tokenFromUrl, user.confirmationToken);
+
+        if (!match) {
+            return res.status(401).send({
+                msg: 'Invalid token'
+            });
+        }
+
+        // update the emailVerified field to true
+        user.emailConfirmed = true;
+        await user.save();
+
+        // send a success message to the client
+        res.status(200).send(
+            'Email confirmed successfully Close that page and logged in.'
+        );
+
+    } catch (err) {
+        res.status(500).send({
+            msg: 'Error confirming email'
+        });
+    }
+}
 
 module.exports = {
-    Register
+    Register,
+    Login,
+    confirm
 };
