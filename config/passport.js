@@ -32,7 +32,7 @@ module.exports = function (passport) {
                         return done(null, user);
                     else
                         return done(null, false, {
-                            message: "email or password is uncorrect"
+                            message: "email or password is incorrect"
                         });
                 })
             })

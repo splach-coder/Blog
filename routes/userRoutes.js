@@ -5,6 +5,11 @@ const {
     check
 } = require('express-validator');
 
+const {
+    forwardAuthenticated
+} = require('../config/auth');
+
+
 
 router.post('/register', [
     check('firstname').notEmpty().withMessage('First Name is required').trim().escape(),
@@ -35,7 +40,11 @@ router.post('/login', [
 ], userController.Login);
 
 
-router.get('/confirm/:token/:id', userController.confirm);
+router.get('/confirm/:token/:id', forwardAuthenticated, userController.confirm);
+
+
+// Logout
+router.get('/logout', userController.Logout);
 
 
 module.exports = router;

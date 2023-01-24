@@ -13,6 +13,7 @@ const allCountries = phoneUtil.getSupportedRegions().map(region => {
         region: region
     }
 });
+allCountries.sort((a, b) => a.code - b.code);
 
 
 const Register = async (req, res) => {
@@ -190,8 +191,21 @@ const confirm = async (req, res) => {
     }
 }
 
+
+const Logout = (req, res) => {
+    req.logout(err => {
+        if (err) {
+            return next(err)
+        }
+        req.flash('success_msg', 'You are logged out');
+        res.redirect('/login');
+    });
+
+}
+
 module.exports = {
     Register,
     Login,
-    confirm
+    confirm,
+    Logout
 };
