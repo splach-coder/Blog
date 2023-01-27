@@ -38,9 +38,6 @@ app.use(session({
     secret: 'mysecret',
     resave: true,
     saveUninitialized: true,
-    cookie: {
-        maxAge: 1000 * 60
-    }
 }));
 
 // Passport middleware
@@ -61,6 +58,7 @@ app.use((req, res, next) => {
 //routes
 app.use('/', require('./routes/index-routes'));
 app.use('/users', require('./routes/userRoutes'));
+app.use('/users', require('./routes/inner-index-routes'));
 app.use('/filter', require('./routes/filtreReqs'));
 
 const PORT = process.env.PORT || 3000;

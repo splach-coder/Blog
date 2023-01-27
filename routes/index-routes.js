@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const profileController = require('../controllers/profileController');
+const relationController = require('../controllers/usersRelationController');
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const allCountries = phoneUtil.getSupportedRegions().map(region => {
     return {
@@ -12,6 +14,7 @@ const {
     ensureAuthenticated,
     forwardAuthenticated
 } = require('../config/auth');
+
 
 allCountries.sort((a, b) => a.code - b.code);
 
@@ -26,9 +29,11 @@ router.get('/login', forwardAuthenticated, (req, res) => {
 })
 
 //go to login page
-router.get('/dashboard', ensureAuthenticated, (req, res) => {
+router.get('/dashboard', ensureAuthenticated, profileController.Users, relationController.friendRequests, (req, res) => {
     res.render('dashboard', {
-        user: req.user
+        user: req.user,
+        users: req.users,
+        friendsReq: req.friendsData
     });
 })
 
@@ -38,5 +43,7 @@ router.get('/register', forwardAuthenticated, (req, res) => {
         countries: allCountries
     });
 })
+
+
 
 module.exports = router;

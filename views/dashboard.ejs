@@ -1,3 +1,26 @@
 <h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome  <%= user.name %></p>
+<p class="lead mb-3" id="user_id" data-id="<%= user.id %>">
+  Welcome <%= user.firstname %>
+</p>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
+<a href="/users/profile/posts/<%= user.id %>" class="btn btn-primary"
+  >Profile</a
+>
+
+<h1 class="display-4">suggests</h1>
+<% users.forEach (function(u) { %>
+<div class="user border border-1 m-2">
+  <h3 class="username"><%= u.firstname%> <%= u.lastname%></h3>
+  <button class="btn btn-primary" onclick="invite(event)" data-id="<%= u.id%>">
+    Invite
+  </button>
+</div>
+<% });%>
+
+<h1 class="display-4">Friends Requests</h1>
+<% friendsReq.forEach (function(u) { %>
+<div class="user border border-1 m-2">
+  <h3 class="username"><%= u.firstname%> <%= u.lastname%></h3>
+  <button class="btn btn-primary" onclick="accepted(event)" data-id="<%= u.id%>">Accepte</button>
+</div>
+<% });%>

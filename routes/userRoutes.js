@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const profileController = require('../controllers/profileController');
 const {
     check
 } = require('express-validator');
 
 const {
+    ensureAuthenticated,
     forwardAuthenticated
 } = require('../config/auth');
 
-
+const User = require('../models/Users');
 
 router.post('/register', [
     check('firstname').notEmpty().withMessage('First Name is required').trim().escape(),
@@ -42,6 +44,27 @@ router.post('/login', [
 
 router.get('/confirm/:token/:id', forwardAuthenticated, userController.confirm);
 
+router.get('/profile/posts/:id', ensureAuthenticated, async (req, res) => {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    res.locals.layout = 'layout2';
+    res.render('posts', {
+        user
+    })
+})
+
+router.get('/profile/friends/:id', ensureAuthenticated, profileController.Friends, async (req, res) => {
+    const userId = req.params.id;
+    const friendsData = req.friendsData;
+    const user = await User.findById(userId);
+    res.locals.layout = 'layout2';
+    res.render('friends', {
+        user,
+        friendsData,
+        item: 'friends'
+    })
+})
 
 // Logout
 router.get('/logout', userController.Logout);
